@@ -1,6 +1,6 @@
-# Assignment the First
+# Part 1
 
-## Part 1
+## Quality Score Distribution per-nucleotide
 1. Be sure to upload your Python script: [python script](./part1.py) and [bash script](./part1.sh)
 
 | File name | label | Read length | Phred encoding |
@@ -32,7 +32,7 @@
     The total amount of indexes that have undetermined (N) base calls: 7304664
 
 
-## Part 2
+## Develop an algorithm to de-multiplex the samples
 1. Define the problem
 
    We have 4 files: read 1, index 1, read 2, and index 2. Read 1 corresponds with index 1 and read 2 corresponds with index2. I want to filter though each file and first check the quality score. If the score if below the threshold I assigned I will put it in an unknown file output. After quality filtering through each sequence and index, I will open all four files and go through each record and combine the record for read 1 and read 2 (example “AAAAAAAA-CCCCCCCC") at the end of the header for both read 1 and read 2. If the barcodes match, those records will go into output files for 'dual matched', if they do not match they will go into output 'index-hopped', and if the barcode is not one of the 24 known barcodes listed, it will go into output files 'unknown index'. 
