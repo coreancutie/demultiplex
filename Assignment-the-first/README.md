@@ -1,6 +1,6 @@
-# Demultiplexing and Index Swapping – Assignment the First
+# Demultiplexing and Index Swapping – Part 1
 
-**Goals**: Our goal is to look through a lane of sequencing generated from the 2017 BGMP cohort’s library preps and determine the level of index swapping and undetermined index-pairs, before and after quality filtering of index reads. In order to do this, we must first demultiplex the data. In Assignment the First, we will develop a strategy to de-multiplex samples to create **48 FASTQ files** that contain acceptable index pairs (read1 and read2 for 24 different index pairs), **two FASTQ files** with index-hopped reads-pairs, and **two FASTQ files** undetermined (non-matching or low quality) index-pairs. **Total of 52 fastq files!**
+**Goals**: Look through a lane of sequencing generated from the 2017 BGMP cohort’s library preps and determine the level of index swapping and undetermined index-pairs, before and after quality filtering of index reads. In order to do this, we must first demultiplex the data. In Assignment the First, we will develop a strategy to de-multiplex samples to create **48 FASTQ files** that contain acceptable index pairs (read1 and read2 for 24 different index pairs), **two FASTQ files** with index-hopped reads-pairs, and **two FASTQ files** undetermined (non-matching or low quality) index-pairs. **Total of 52 fastq files!**
 
 De-multiplexing is necessary for downstream analyses.
 
@@ -16,7 +16,6 @@ A12	TCGACAAG    C10	TCTTCGAC    A2	ATCATGCG
 C2	ATCGTGGT    A10	TCGAGAGT    B8	TCGGATTC
 A7	GATCTTGC    B10	AGAGTCCA    A8	AGGATAGC
 ```
-You can find a txt file containing these indexes on Talapas.
 
 4 FASTQ files are: 
 ```bash
@@ -25,23 +24,21 @@ You can find a txt file containing these indexes on Talapas.
 1294_S1_L008_R3_001.fastq.gz
 1294_S1_L008_R4_001.fastq.gz
 ```
-in ```/projects/bgmp/shared/2017_sequencing/```. DO NOT copy or unzip these data. You may want to check out the [gzip module in python](https://docs.python.org/3/library/gzip.html).
 
-Please fill in your answers on [Answers.md](Answers.md)
+Answers are on [Answers.md](Answers.md)
 
-## Part 1 – Quality Score Distribution per-nucleotide
-1.	Perform some initial data exploration! Record any bash commands you used inside a lab notebook (submit to this repo!). (Phred is either +33 or +64)
+## Quality Score Distribution per-nucleotide
+1.	Perform some initial data exploration!
     1. Determine which files contain the indexes, and which contain the paired end reads containing the biological data of interest. Create a table and label each file with either read1, read2, index1, or index2.
     2. Determine the length of the reads in each file.
-    3. Determine the phred encoding for these data.
-2.	Generate a per base distribution of quality scores for read1, read2, index1, and index2. Average the quality scores at each position for all reads and generate a per nucleotide mean distribution **as you did in part 1 of PS4 in Bi621**. (NOTE! Do NOT use the 2D array strategy from PS9 - you WILL run out of memory!)(per-base means average quality score per base (PS9/PS4!) put it in a python script, NOT jupyter notebook
-USE argparse!)
-    1.	Turn in the 4 histograms.
-    2.	What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? Justify your answer.
+    3. Determine the phred encoding for these data (either +33 or +64).
+2.	Generate a per base distribution of quality scores for read1, read2, index1, and index2. Average the quality scores at each position for all reads and generate a per nucleotide mean distribution.
+    1.	Turn in the four histograms.
+    2.	What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? 
     3.	How many indexes have undetermined (N) base calls? (Utilize your command line tool knowledge. Submit the command(s) you used. CHALLENGE: use a one-line command)
 
-## Part 2 – Develop an algorithm to de-multiplex the samples
-Write up a strategy (**NOT A SCRIPT**) for writing an algorithm to de-multiplex files and reporting index-hopping. That is, given four input FASTQ files (2 with biological reads, 2 with index reads) and the 24 known indexes above, demultiplex reads by index-pair, outputting:
+## Develop an algorithm to de-multiplex the samples
+Write up a strategy for developing an algorithm to de-multiplex files and reporting index-hopping given four input FASTQ files (two with biological reads, two with index reads) and the 24 known indexes above, demultiplex reads by index-pair, outputting:
 
 - one R1 FASTQ file and one R2 FASTQ file **per** matching index-pair, 
 - another two FASTQ files for non-matching index-pairs (index-hopping), and 
@@ -50,11 +47,11 @@ Write up a strategy (**NOT A SCRIPT**) for writing an algorithm to de-multiplex 
 Add the sequence of the index-pair to the header of BOTH reads in all of your FASTQ files for all categories (e.g. add “AAAAAAAA-CCCCCCCC” to the end of headers of every read pair that had an index1 of AAAAAAAA and an index2 of CCCCCCCC; this pair of reads would be in the unknown category as one or both of these indexes do not match the 24 known indexes).
 
 Additionally, your algorithm should report: 
-- the number of read-pairs with properly matched indexes (per index-pair), 
-- the number of read pairs with index-hopping observed, and
-- the number of read-pairs with unknown index(es).
+- the number of read-pairs with properly matched indexes (per index-pair)
+- the number of read pairs with index-hopping observed
+- the number of read-pairs with unknown index(es)
 
-You should strive to report values for each possible pair of indexes (both swapped and dual matched). **You should not write any code for this portion of the assignment**. 
+You should strive to report values for each possible pair of indexes (both swapped and dual matched).
 
 ### Be sure to:
 - Define the problem
@@ -65,21 +62,3 @@ You should strive to report values for each possible pair of indexes (both swapp
     - Include the appropriate number of properly formatted output FASTQ files given your input files
 - Develop your algorithm using pseudocode
 - Determine high level functions
-    - Function headers (name and parameters)
-    - Description/doc string – What does this function do?
-    - Test examples for individual functions
-    - Return statement
-    - Example: If you were planning to write the function ```convert_phred()```, you would include something like
-      ```python
-      def convert_phred(letter: str) -> int:
-          '''Takes a single ASCII character (string) encoded in Phred+33 and
-          returns the quality score value as an integer.'''
-          return qscore
-      Input: I
-      Expected output: 40
-      ```
-
-Turn in:
-
-[Answers to questions](Answers.md), Python script for [part 1](https://github.com/Leslie-C/Demultiplexing/tree/master/Assignment-the-first#part-1--quality-score-distribution-per-nucleotide), 4 plots, and anything outlined in part 2 (NOT CODE!) to [GitHub](.).
-
